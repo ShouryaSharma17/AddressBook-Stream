@@ -72,6 +72,22 @@ public class AddressBook {
         return false;
     }
 
+    public List<String> searchPersonByCityorState(String cityOrState) {
+        List<String> personsInCityOrState =new ArrayList<>();
+        for(Map.Entry<String, Set<ContactPerson>> me : addressBookSystem.entrySet()) {
+            Set<ContactPerson> addressBook=me.getValue();
+            for(ContactPerson contactPerson : addressBook)
+            {
+                String personName=contactPerson.getFirstName()+" "+contactPerson.getLastName();
+                String cityName=contactPerson.getCity();
+                String stateName=contactPerson.getState();
+                if(cityName.equals(cityOrState) || stateName.equals(cityOrState))
+                    personsInCityOrState.add(personName);
+            }
+        }
+        return personsInCityOrState;
+    }
+
     public void showAddressBook(String addressBookName) {
         int check=0;
         for(Map.Entry<String, Set<ContactPerson>> me : addressBookSystem.entrySet()) {
@@ -135,4 +151,3 @@ public class AddressBook {
         return personDetails;
     }
 }
-
