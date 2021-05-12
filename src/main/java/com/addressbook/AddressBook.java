@@ -109,6 +109,19 @@ public class AddressBook {
         return personCityStateMap;
     }
 
+    public void countPersonByCityorState(String cityOrState) {
+        int count=0;
+        Map<String,List<String>> personCityStateMap =  viewPersonByCityOrState(cityOrState);
+        for(Map.Entry<String, List<String>> me : personCityStateMap.entrySet()) {
+            String addressBookName = me.getKey();
+            List<String> personsInCityOrState = me.getValue();
+            int noOfPersons = personsInCityOrState.size();
+            System.out.println("The no. of persons reside in the "+cityOrState+" is "+noOfPersons+" given in the "+addressBookName+".");
+            count+=noOfPersons;
+        }
+        System.out.println("There are total "+count+" persons in the "+cityOrState+".");
+    }
+
     public void showAddressBook(String addressBookName) {
         int check=0;
         for(Map.Entry<String, Set<ContactPerson>> me : addressBookSystem.entrySet()) {
