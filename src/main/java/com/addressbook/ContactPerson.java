@@ -51,6 +51,32 @@ public class ContactPerson {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ContactPerson other = (ContactPerson) obj;
+        if (firstName == null) {
+            if (other.firstName != null)
+                return false;
+        } else if (!firstName.equals(other.firstName))
+            return false;
+        if (lastName == null) {
+            if (other.lastName != null)
+                return false;
+        } else if (!lastName.equals(other.lastName))
+            return false;
+        return true;
+    }
+
+    public int hashCode() {
+        return 10;
+    }
+
+    @Override
     public String toString() {
         return "firstName=" + firstName + ", lastName=" + lastName + ", address=" + address + ", city=" + city
                 + ", state=" + state + ", zip=" + zip + ", phoneNo=" + phoneNo + ", emailId=" + emailId;

@@ -132,6 +132,7 @@ public class AddressBook {
 
     // Printing all the address books
     public void showAddressBookSystem() {
+        sortedByName();
         if (addressBookSystem.size() == 0)
             System.out.println("There is no address book in the system.");
         else {
@@ -143,6 +144,19 @@ public class AddressBook {
                     me.getValue().stream().forEach(contactPerson -> System.out.println(contactPerson));
             });
         }
+    }
+
+    // Sorting the address book by name
+    public void sortedByName() {
+        Map<String, Set<ContactPerson>> personNameSortedMap = new HashMap<>();
+        for (Map.Entry<String, Set<ContactPerson>> me : addressBookSystem.entrySet()) {
+            Set<ContactPerson> personsInCity = me.getValue().stream()
+                    .sorted((ab1, ab2) -> (ab1.getFirstName() + " " + ab1.getLastName())
+                            .compareTo(ab2.getFirstName() + " " + ab2.getLastName()))
+                    .collect(Collectors.toSet());
+            personNameSortedMap.put(me.getKey(), personsInCity);
+        }
+        addressBookSystem = personNameSortedMap;
     }
 
     // Sorting the address book by city

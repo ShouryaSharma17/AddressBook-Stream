@@ -7,6 +7,7 @@ public class AddressBookSystem {
 
         AddressBook addressBookMain = new AddressBook();
         AddressBookFileNIO addBookFileNIO = new AddressBookFileNIO();
+        OpenCSVService openCSVService = new OpenCSVService();
         Scanner input = new Scanner(System.in);
 
         while (true) {
@@ -24,7 +25,9 @@ public class AddressBookSystem {
             System.out.println("11. Sort the address book by Zip");
             System.out.println("12. Writing data to file");
             System.out.println("13. Reading data from file");
-            System.out.println("14. Exit");
+            System.out.println("14. Writing data to CSV");
+            System.out.println("15. Reading data from CSV");
+            System.out.println("16. Exit");
 
             String option = input.next();
 
@@ -42,7 +45,7 @@ public class AddressBookSystem {
                             "Enter the number of person's details to be added in address book: " + addressBookName);
                     int noOfPerson = input.nextInt();
 
-                    Set<ContactPerson> phoneBook = new TreeSet<>(new ComparingByName());
+                    Set<ContactPerson> phoneBook = new HashSet<>();
                     addressBookMain.setAddressBook(phoneBook);
                     for (int j = 0; j < noOfPerson; j++) {
                         System.out.println("Enter the details of the Contact Person");
@@ -219,8 +222,28 @@ public class AddressBookSystem {
                 continue;
             }
 
-            // Exiting from the address book system
+            // Writing data into CSV
             if (option.equals("14")) {
+                try {
+                    openCSVService.writetoCsv(addressBookMain.getAddressBookSystem());
+                } catch (IOException e) {
+                    e.getMessage();
+                }
+                continue;
+            }
+
+            // Reading data from CSV
+            if (option.equals("15")) {
+                try {
+                    openCSVService.readCsv();
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+                continue;
+            }
+
+            // Exiting from the address book system
+            if (option.equals("16")) {
                 System.out.println("Thank you.");
                 break;
             } else
