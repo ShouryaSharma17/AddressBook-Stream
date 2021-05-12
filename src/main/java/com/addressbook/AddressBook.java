@@ -8,6 +8,10 @@ public class AddressBook {
     private Set<ContactPerson> addressBook;
     private static Map<String, Set<ContactPerson>> addressBookSystem = new TreeMap<>();
 
+    public Map<String, Set<ContactPerson>> getAddressBookSystem() {
+        return addressBookSystem;
+    }
+
     public Set<ContactPerson> getAddressBook() {
         return addressBook;
     }
