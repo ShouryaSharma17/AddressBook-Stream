@@ -17,7 +17,10 @@ public class AddressBookSystem {
             System.out.println("6. Search person by the city or sate");
             System.out.println("7. View person by the city or state");
             System.out.println("8. Count by city or sate");
-            System.out.println("9. Exit");
+            System.out.println("9. Sort the address book by City");
+            System.out.println("10. Sort the address book by State");
+            System.out.println("11. Sort the address book by Zip");
+            System.out.println("12. Exit");
 
             String option = input.next();
 
@@ -156,8 +159,44 @@ public class AddressBookSystem {
                 continue;
             }
 
-            // Exiting from the address book system
+            // Sort person details by the city or state
             if (option.equals("9")) {
+                Map<String, List<ContactPerson>> personCitySortedMap = addressBookMain.viewSortedByCity();
+                if (personCitySortedMap.size() == 0)
+                    System.out.println("Sorry, there is no any details.");
+                else {
+                    System.out.println("The address books are sorted by city:");
+                    addressBookMain.printSortedMap(personCitySortedMap);
+                }
+                continue;
+            }
+
+            // Sort person details by the city or state
+            if (option.equals("10")) {
+                Map<String, List<ContactPerson>> personStateSortedMap = addressBookMain.viewSortedByState();
+                if (personStateSortedMap.size() == 0)
+                    System.out.println("Sorry, there is no any details.");
+                else {
+                    System.out.println("The address books are sorted by state:");
+                    addressBookMain.printSortedMap(personStateSortedMap);
+                }
+                continue;
+            }
+
+            // Sort person details by the city or state
+            if (option.equals("11")) {
+                Map<String, List<ContactPerson>> personZipSortedMap = addressBookMain.viewSortedByZip();
+                if (personZipSortedMap.size() == 0)
+                    System.out.println("Sorry, there is no any details.");
+                else {
+                    System.out.println("The address books are sorted by zip:");
+                    addressBookMain.printSortedMap(personZipSortedMap);
+                }
+                continue;
+            }
+
+            // Exiting from the address book system
+            if (option.equals("12")) {
                 System.out.println("Thank you.");
                 break;
             } else

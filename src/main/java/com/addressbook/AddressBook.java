@@ -141,6 +141,54 @@ public class AddressBook {
         }
     }
 
+    // Sorting the address book by city
+    public Map<String, List<ContactPerson>> viewSortedByCity() {
+        Map<String, List<ContactPerson>> personCitySortedMap = new HashMap<>();
+        for (Map.Entry<String, Set<ContactPerson>> me : addressBookSystem.entrySet()) {
+            List<ContactPerson> personsInCity = me.getValue().stream()
+                    .sorted((ab1, ab2) -> ab1.getCity().compareTo(ab2.getCity())).collect(Collectors.toList());
+            personCitySortedMap.put(me.getKey(), personsInCity);
+        }
+        return personCitySortedMap;
+    }
+
+    // Sorting the address book by state
+    public Map<String, List<ContactPerson>> viewSortedByState() {
+        Map<String, List<ContactPerson>> personStateSortedMap = new HashMap<>();
+        for (Map.Entry<String, Set<ContactPerson>> me : addressBookSystem.entrySet()) {
+            List<ContactPerson> personsInState = me.getValue().stream()
+                    .sorted((ab1, ab2) -> ab1.getState().compareTo(ab2.getState())).collect(Collectors.toList());
+            personStateSortedMap.put(me.getKey(), personsInState);
+        }
+        return personStateSortedMap;
+    }
+
+    // Sorting the address book by zip
+    public Map<String, List<ContactPerson>> viewSortedByZip() {
+        Map<String, List<ContactPerson>> personZipSortedMap = new HashMap<>();
+        for (Map.Entry<String, Set<ContactPerson>> me : addressBookSystem.entrySet()) {
+            List<ContactPerson> personsInZip = me.getValue().stream().sorted((ab1, ab2) -> ab1.getZip() - ab2.getZip())
+                    .collect(Collectors.toList());
+            personZipSortedMap.put(me.getKey(), personsInZip);
+        }
+        return personZipSortedMap;
+    }
+
+    // Printing the sorted map
+    public void printSortedMap(Map<String, List<ContactPerson>> sortedMap) {
+        if (sortedMap.size() == 0)
+            System.out.println("There is no address book in the system.");
+        else {
+            sortedMap.entrySet().stream().forEach(me -> {
+                System.out.println("The contact details of the " + me.getKey() + ":");
+                if (me.getValue().size() == 0)
+                    System.out.println("Sorry, there is no contact in the " + me.getKey() + ".");
+                else
+                    me.getValue().stream().forEach(contactPerson -> System.out.println(contactPerson));
+            });
+        }
+    }
+
     // Initialising the contact person object
     public ContactPerson addContactPersonDetails(Scanner input) {
         System.out.println("Enter the first name:");
