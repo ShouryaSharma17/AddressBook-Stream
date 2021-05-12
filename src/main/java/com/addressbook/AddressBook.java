@@ -8,12 +8,12 @@ public class AddressBook {
     private Set<ContactPerson> addressBook;
     private static Map<String, Set<ContactPerson>> addressBookSystem = new TreeMap<>();
 
-    public Set<ContactPerson> getAddressBook(){
+    public Set<ContactPerson> getAddressBook() {
         return addressBook;
     }
 
-    public void setAddressBook(Set<ContactPerson> addressBook){
-        this.addressBook=addressBook;
+    public void setAddressBook(Set<ContactPerson> addressBook) {
+        this.addressBook = addressBook;
     }
 
     public void addContactPerson(ContactPerson contactPerson) {
@@ -24,27 +24,28 @@ public class AddressBook {
         addressBookSystem.put(addressBookName, addressBook);
     }
 
+    // Checking whether address book is present or not in system
     public boolean isPresentAddressBook(String addressBookName) {
         Predicate<String> isPresent = k -> k.equals(addressBookName);
         List<String> nameList = addressBookSystem.keySet().stream().filter(isPresent).collect(Collectors.toList());
-        if(nameList.size()==0)
+        if (nameList.size() == 0)
             return false;
         return true;
     }
 
-    public boolean editContactPersonDetails(String addressBookName, String personName) {
-        for(Map.Entry<String, Set<ContactPerson>> me : addressBookSystem.entrySet()) {
-            String adBookName= me.getKey();
-            Set<ContactPerson> addressBook=me.getValue();
-            if(adBookName.equals(addressBookName)) {
-                for(ContactPerson contactPerson : addressBook)
-                {
-                    String name=contactPerson.getFirstName()+" "+contactPerson.getLastName();
-                    if(name.equals(personName)) {
+    // Editing the contact person details in the address book
+    public boolean editContactPersonDetails(String addressBookName, String personName, Scanner input) {
+        for (Map.Entry<String, Set<ContactPerson>> me : addressBookSystem.entrySet()) {
+            String adBookName = me.getKey();
+            Set<ContactPerson> addressBook = me.getValue();
+            if (adBookName.equals(addressBookName)) {
+                for (ContactPerson contactPerson : addressBook) {
+                    String name = contactPerson.getFirstName() + " " + contactPerson.getLastName();
+                    if (name.equals(personName)) {
                         addressBook.remove(contactPerson);
-                        ContactPerson contactPerson1 =addContactPersonDetails();
+                        ContactPerson contactPerson1 = addContactPersonDetails(input);
                         addressBook.add(contactPerson1);
-                        addAddressBookToSystem(addressBookName,addressBook);
+                        addAddressBookToSystem(addressBookName, addressBook);
                         return true;
                     }
                 }
@@ -53,17 +54,17 @@ public class AddressBook {
         return false;
     }
 
+    // Deleting the contact person details from the address book
     public boolean deleteContactPersonDetails(String addressBookName, String personName) {
-        for(Map.Entry<String, Set<ContactPerson>> me : addressBookSystem.entrySet()) {
-            String adBookName= me.getKey();
-            Set<ContactPerson> addressBook=me.getValue();
-            if(adBookName.equals(addressBookName)) {
-                for(ContactPerson contactPerson : addressBook)
-                {
-                    String name=contactPerson.getFirstName()+" "+contactPerson.getLastName();
-                    if(name.equals(personName)) {
+        for (Map.Entry<String, Set<ContactPerson>> me : addressBookSystem.entrySet()) {
+            String adBookName = me.getKey();
+            Set<ContactPerson> addressBook = me.getValue();
+            if (adBookName.equals(addressBookName)) {
+                for (ContactPerson contactPerson : addressBook) {
+                    String name = contactPerson.getFirstName() + " " + contactPerson.getLastName();
+                    if (name.equals(personName)) {
                         addressBook.remove(contactPerson);
-                        addAddressBookToSystem(addressBookName,addressBook);
+                        addAddressBookToSystem(addressBookName, addressBook);
                         return true;
                     }
                 }
@@ -72,116 +73,95 @@ public class AddressBook {
         return false;
     }
 
+    // Listing the persons based on the city and state respectively
     public List<String> searchPersonByCityorState(String cityOrState) {
-        List<String> personsInCityOrState =new ArrayList<>();
-        for(Map.Entry<String, Set<ContactPerson>> me : addressBookSystem.entrySet()) {
-            Set<ContactPerson> addressBook=me.getValue();
-            for(ContactPerson contactPerson : addressBook)
-            {
-                String personName=contactPerson.getFirstName()+" "+contactPerson.getLastName();
-                String cityName=contactPerson.getCity();
-                String stateName=contactPerson.getState();
-                if(cityName.equals(cityOrState) || stateName.equals(cityOrState))
-                    personsInCityOrState.add(personName);
-            }
+        List<String> personsInCityOrState = new ArrayList<String>();
+        for (Map.Entry<String, Set<ContactPerson>> me : addressBookSystem.entrySet()) {
+            List<String> personsList = me.getValue().stream()
+                    .filter(contactPerson -> contactPerson.getCity().equals(cityOrState)
+                            || contactPerson.getState().equals(cityOrState))
+                    .map(contactPerson -> contactPerson.getFirstName() + " " + contactPerson.getLastName())
+                    .collect(Collectors.toList());
+            personsInCityOrState.addAll(personsList);
         }
         return personsInCityOrState;
     }
 
-    public Map<String,List<String>> viewPersonByCityOrState(String cityOrState) {
-        Map<String,List<String>> personCityStateMap =new HashMap<>();
-        for(Map.Entry<String, Set<ContactPerson>> me : addressBookSystem.entrySet()) {
-            List<String> personsInCityOrState = new ArrayList<>();
-            String addressBookName = me.getKey();
-            Set<ContactPerson> addressBook=me.getValue();
-            for(ContactPerson contactPerson : addressBook)
-            {
-                String personName=contactPerson.getFirstName()+" "+contactPerson.getLastName();
-                String cityName=contactPerson.getCity();
-                String stateName=contactPerson.getState();
-
-                if(cityOrState.equals(cityName) || cityOrState.equals(stateName)) {
-                    personsInCityOrState.add(personName);
-                }
-            }
-            personCityStateMap.put(addressBookName, personsInCityOrState);
+    // Mapping the persons by city or state
+    public Map<String, List<String>> viewPersonByCityOrState(String cityOrState) {
+        Map<String, List<String>> personCityStateMap = new HashMap<>();
+        for (Map.Entry<String, Set<ContactPerson>> me : addressBookSystem.entrySet()) {
+            List<String> personsInCityOrState = me.getValue().stream()
+                    .filter(contactPerson -> contactPerson.getCity().equals(cityOrState)
+                            || contactPerson.getState().equals(cityOrState))
+                    .map(contactPerson -> contactPerson.getFirstName() + " " + contactPerson.getLastName())
+                    .collect(Collectors.toList());
+            personCityStateMap.put(me.getKey(), personsInCityOrState);
         }
         return personCityStateMap;
     }
 
+    // Counting the persons by city and state respectively
     public void countPersonByCityorState(String cityOrState) {
-        int count=0;
-        Map<String,List<String>> personCityStateMap =  viewPersonByCityOrState(cityOrState);
-        for(Map.Entry<String, List<String>> me : personCityStateMap.entrySet()) {
-            String addressBookName = me.getKey();
-            List<String> personsInCityOrState = me.getValue();
-            int noOfPersons = personsInCityOrState.size();
-            System.out.println("The no. of persons reside in the "+cityOrState+" is "+noOfPersons+" given in the "+addressBookName+".");
-            count+=noOfPersons;
-        }
-        System.out.println("There are total "+count+" persons in the "+cityOrState+".");
+        Map<String, List<String>> personCityStateMap = viewPersonByCityOrState(cityOrState);
+        personCityStateMap.entrySet().stream().forEach(me -> {
+            System.out.println("The no. of persons reside in the " + cityOrState + " is " + me.getValue().size()
+                    + ", as given in the " + me.getKey() + ".");
+        });
+        int count = personCityStateMap.entrySet().stream().map(me -> me.getValue().size()).reduce(0, (a, b) -> a + b);
+        System.out.println("There are total " + count + " persons in the " + cityOrState + ".");
     }
 
+    // Printing address book by its name
     public void showAddressBook(String addressBookName) {
-        int check=0;
-        for(Map.Entry<String, Set<ContactPerson>> me : addressBookSystem.entrySet()) {
-            String adBookName= me.getKey();
-            Set<ContactPerson> addressBook=me.getValue();
-            if(adBookName.equals(addressBookName)) {
-                check=1;
-                if(addressBook.size()==0) {
-                    System.out.println("Sorry, there is no contact deatails in the "+addressBookName+".");
-                    break;
-                }
+        addressBookSystem.entrySet().stream().forEach(me -> {
+            if (me.getKey().equals(addressBookName)) {
+                if (me.getValue().size() == 0)
+                    System.out.println("Sorry, there is no contact details in the " + addressBookName + ".");
                 else {
-                    System.out.println("The contact details of the "+addressBookName+":");
-                    addressBook.stream().forEach(contactPerson -> System.out.println(contactPerson));
-                    break;
+                    System.out.println("The contact details of the " + addressBookName + ":");
+                    me.getValue().stream().forEach(contactPerson -> System.out.println(contactPerson));
                 }
             }
-        }
-        if(check!=1)
-            System.out.println("Sorry, Address Book: "+addressBookName+" is not present in the system.");
+        });
     }
 
+    // Printing all the address books
     public void showAddressBookSystem() {
-        if(addressBookSystem.size()==0)
+        if (addressBookSystem.size() == 0)
             System.out.println("There is no address book in the system.");
         else {
-            for(Map.Entry<String, Set<ContactPerson>> me : addressBookSystem.entrySet()) {
-                String addressBookName= me.getKey();
-                Set<ContactPerson> addressBook=me.getValue();
-                System.out.println("The contact details of the "+addressBookName+":");
-                if(addressBook.size()==0)
-                    System.out.println("Sorry, there is no contact in the "+addressBookName+".");
+            addressBookSystem.entrySet().stream().forEach(me -> {
+                System.out.println("The contact details of the " + me.getKey() + ":");
+                if (me.getValue().size() == 0)
+                    System.out.println("Sorry, there is no contact in the " + me.getKey() + ".");
                 else
-                    addressBook.stream().forEach(contactPerson -> System.out.println(contactPerson));
-            }
+                    me.getValue().stream().forEach(contactPerson -> System.out.println(contactPerson));
+            });
         }
-
     }
 
-    public ContactPerson addContactPersonDetails(){
-        Scanner sc=new Scanner(System.in);
+    // Initialising the contact person object
+    public ContactPerson addContactPersonDetails(Scanner input) {
         System.out.println("Enter the first name:");
-        String firstName=sc.next();
+        String firstName = input.next();
         System.out.println("Enter the last name:");
-        String lastName=sc.next();
+        String lastName = input.next();
         System.out.println("Enter the address:");
-        sc.nextLine();
-        String address=sc.nextLine();
+        input.nextLine();
+        String address = input.nextLine();
         System.out.println("Enter the city:");
-        String city=sc.nextLine();
+        String city = input.nextLine();
         System.out.println("Enter the state:");
-        String state=sc.nextLine();
+        String state = input.nextLine();
         System.out.println("Enter the zip:");
-        int zip=sc.nextInt();
+        int zip = input.nextInt();
         System.out.println("Enter the phoneNo:");
-        long phoneNo=sc.nextLong();
+        long phoneNo = input.nextLong();
         System.out.println("Enter the email:");
-        String emailId=sc.next();
-
-        ContactPerson personDetails=new ContactPerson(firstName,lastName,address,city,state,zip,phoneNo,emailId);
+        String emailId = input.next();
+        ContactPerson personDetails = new ContactPerson(firstName, lastName, address, city, state, zip, phoneNo,
+                emailId);
         return personDetails;
     }
 }
