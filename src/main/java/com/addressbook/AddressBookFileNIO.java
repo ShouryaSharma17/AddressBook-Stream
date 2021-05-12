@@ -30,8 +30,9 @@ public class AddressBookFileNIO {
         for (Map.Entry<String, Set<ContactPerson>> me : addressBookSystem.entrySet()) {
             List<String> contactDeatilsList = me.getValue().stream()
                     .map(contactPerson -> "Name: " + contactPerson.getFirstName() + " " + contactPerson.getLastName()
-                            + ", City: " + contactPerson.getCity() + ", State: " + contactPerson.getState() + ", Zip: "
-                            + contactPerson.getZip())
+                            + ", Address: " + contactPerson.getAddress() + ", City: " + contactPerson.getCity()
+                            + ", State: " + contactPerson.getState() + ", Zip: " + contactPerson.getZip()
+                            + ", PhoneNo: " + contactPerson.getPhoneNo() + ", EmailId: " + contactPerson.getEmailId())
                     .collect(Collectors.toList());
             contactList.addAll(contactDeatilsList);
         }
