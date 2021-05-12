@@ -88,6 +88,27 @@ public class AddressBook {
         return personsInCityOrState;
     }
 
+    public Map<String,List<String>> viewPersonByCityOrState(String cityOrState) {
+        Map<String,List<String>> personCityStateMap =new HashMap<>();
+        for(Map.Entry<String, Set<ContactPerson>> me : addressBookSystem.entrySet()) {
+            List<String> personsInCityOrState = new ArrayList<>();
+            String addressBookName = me.getKey();
+            Set<ContactPerson> addressBook=me.getValue();
+            for(ContactPerson contactPerson : addressBook)
+            {
+                String personName=contactPerson.getFirstName()+" "+contactPerson.getLastName();
+                String cityName=contactPerson.getCity();
+                String stateName=contactPerson.getState();
+
+                if(cityOrState.equals(cityName) || cityOrState.equals(stateName)) {
+                    personsInCityOrState.add(personName);
+                }
+            }
+            personCityStateMap.put(addressBookName, personsInCityOrState);
+        }
+        return personCityStateMap;
+    }
+
     public void showAddressBook(String addressBookName) {
         int check=0;
         for(Map.Entry<String, Set<ContactPerson>> me : addressBookSystem.entrySet()) {
